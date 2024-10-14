@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import { ClerkProvider } from "@clerk/nextjs";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,12 +27,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          {/*         
+        w-full: 这个类使得元素占据其父容器的全部宽度。
+        bg-white: 设置背景颜色为白色。
+        md:px-8: 当屏幕尺寸达到中等（medium）断点时，设置左右内边距（padding）为 2rem（默认情况下，Tailwind CSS 中 px-8 对应 2rem）。这里的 md 是一个媒体查询断点，通常对应于最小宽度768px。
+        lg:px-16: 当屏幕尺寸达到大（large）断点时，设置左右内边距为 4rem。lg 通常对应于最小宽度1024px。
+        xl:px-32: 当屏幕尺寸达到超大（extra large）断点时，设置左右内边距为 8rem。xl 通常对应于最小宽度1280px。
+        2xl:px-64: 当屏幕尺寸达到最大（2 extra large）断点时，设置左右内边距为 16rem。2xl 通常对应于最小宽度1536px。 */}
+
+          <div className="w-full bg-white px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
+            <Navbar />
+          </div>
+          {/* 
+        bg-slate-100: 设置背景颜色为石板灰的浅色变体（#f1f5f9），这是 Tailwind CSS 中预定义的颜色之一。
+        px-4: 设置左右内边距为 1rem。这是默认情况下的内边距设置，适用于所有屏幕尺寸。 */}
+          <div className=" bg-slate-100 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
+            {children}
+          </div>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
