@@ -5,7 +5,7 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # 3. 安装 pnpm
-RUN npm install -g pnpm
+RUN npm config set registry https://registry.npmmirror.com/ && npm install -g pnpm
 
 # 4. 设置淘宝镜像
 RUN pnpm config set registry https://registry.npmmirror.com/
@@ -13,6 +13,8 @@ RUN pnpm config set registry https://registry.npmmirror.com/
 # 5. 复制 pnpm 的配置文件和依赖文件到容器中
 COPY pnpm-lock.yaml ./
 COPY package.json ./
+COPY .env ./
+
 
 # 6. 安装依赖
 RUN pnpm install --frozen-lockfile
@@ -37,10 +39,12 @@ RUN npm install -g pnpm \
 COPY pnpm-lock.yaml ./
 COPY package.json ./
 
+
 # 13. 安装生产依赖
 RUN pnpm install --prod --frozen-lockfile
 
 # 14. 从 builder 阶段复制构建后的文件
+COPY --from=builder /app/.env ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.mjs ./
